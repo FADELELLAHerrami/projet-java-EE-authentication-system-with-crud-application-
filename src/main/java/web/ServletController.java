@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import dao.IProduitDao;
 import dao.ProduitDaoImp;
@@ -18,15 +19,30 @@ import metier.entites.Produit;
 @WebServlet(name="mo-servlet",urlPatterns = {"*.p"})
 public class ServletController extends HttpServlet {
 	private IProduitDao metier;
+	
+
 	@Override
 	public void init() throws ServletException {
 		metier = new ProduitDaoImp();
+		
 	}
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		//session
+		HttpSession session = req.getSession(false);
+	    if (session == null || session.getAttribute("authenticated") == null) {
+	        req.getRequestDispatcher("login.jsp").forward(req, res);
+	        return;
+	    }
+		
 		//Get path
 		String path=req.getServletPath();
+		//login
+		if (path.equals("/login.p")) {
+            req.getRequestDispatcher("login.jsp").forward(req, res);
+            return;
+        }
 		//Delete Product
 		if(path.equals("/supprimer.p")) {
 			Long id = Long.parseLong(req.getParameter("id"));
@@ -79,6 +95,26 @@ public class ServletController extends HttpServlet {
 		String path = req.getServletPath();
 		
 		switch (path) {
+		case "/login.p": {
+			String Email = "admin@gmail.com";
+			String Password = "admin";
+			
+			String email = req.getParameter("email");
+            String password = req.getParameter("password");
+            System.out.println(email);
+            System.out.println(password);
+
+            if (email.equals(Email) && password.equals(Password)) {
+            	HttpSession session = req.getSession();
+                session.setAttribute("authenticated", true);
+            	req.getRequestDispatcher("Produit.jsp").forward(req, res);
+            } else {
+                req.setAttribute("error", "Invalid username or password");
+                req.getRequestDispatcher("login.jsp").forward(req, res);
+            }
+            break;
+		}
+	
 		//Add Product
 		case "/add.p": {
 			String designation = req.getParameter("designation");
