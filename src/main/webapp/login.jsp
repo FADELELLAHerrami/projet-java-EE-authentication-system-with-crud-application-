@@ -65,7 +65,7 @@
 <div class="col-4 " >
 	  <form method="POST" action="login.p">
 	    
-	    <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+	    <h1 class="h3 mb-3 fw-normal">Please log in</h1>
 	
 	    <div class="form-floating">
 	      <input name="email" type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
@@ -82,6 +82,8 @@
 	    <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
 	    <p class="mt-5 mb-3 text-muted">&copy; 2017–2022</p>
 	  </form>
+	  <a href="signup.jsp">Sign Up</a>
+	  
 </div>    
 
 

@@ -51,5 +51,6 @@
 			</div>
 		</div>
 	</div>
+	<jsp:include page="logout.jsp" />
 </body>
 </html>

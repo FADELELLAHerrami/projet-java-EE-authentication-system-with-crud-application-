@@ -11,20 +11,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import dao.IDaoPesronneImp;
+import dao.IPersonneDao;
 import dao.IProduitDao;
 import dao.ProduitDaoImp;
+import metier.entites.Personne;
 import metier.entites.Produit;
 
 @SuppressWarnings("serial")
 @WebServlet(name="mo-servlet",urlPatterns = {"*.p"})
 public class ServletController extends HttpServlet {
 	private IProduitDao metier;
-	
+	private IPersonneDao<Personne> personne;
 
 	@Override
 	public void init() throws ServletException {
 		metier = new ProduitDaoImp();
-		
+		personne = new IDaoPesronneImp();
 	}
 	
 	@Override
@@ -38,9 +41,20 @@ public class ServletController extends HttpServlet {
 		
 		//Get path
 		String path=req.getServletPath();
+		//signup
+		if (path.equals("/signup.p")) {
+            req.getRequestDispatcher("signup.jsp").forward(req, res);
+            return;
+        }
 		//login
 		if (path.equals("/login.p")) {
             req.getRequestDispatcher("login.jsp").forward(req, res);
+            return;
+        }
+		if (path.equals("/logout.p")) {
+			session.removeAttribute("authenticated");
+			res.sendRedirect("login.jsp");
+			session.invalidate();
             return;
         }
 		//Delete Product
@@ -95,16 +109,32 @@ public class ServletController extends HttpServlet {
 		String path = req.getServletPath();
 		
 		switch (path) {
+		case "/signup.p": {
+			
+			String nom = req.getParameter("nom");
+		    String prenom = req.getParameter("prenom");		
+			String email = req.getParameter("email");
+		    String password = req.getParameter("password");
+		    
+		    System.out.println("brahim");
+		    System.out.println("drisii");        
+		    System.out.println(email);
+		    System.out.println(password);
+		    Personne p = new Personne(nom, prenom, email, password);
+		    personne.save(p);
+	        req.getRequestDispatcher("login.jsp").forward(req, res);
+		    break;
+		}
 		case "/login.p": {
-			String Email = "admin@gmail.com";
-			String Password = "admin";
+			
 			
 			String email = req.getParameter("email");
             String password = req.getParameter("password");
+            
             System.out.println(email);
             System.out.println(password);
 
-            if (email.equals(Email) && password.equals(Password)) {
+            if (personne.findByEmailAndPassword(email, password) == true) {
             	HttpSession session = req.getSession();
                 session.setAttribute("authenticated", true);
             	req.getRequestDispatcher("Produit.jsp").forward(req, res);

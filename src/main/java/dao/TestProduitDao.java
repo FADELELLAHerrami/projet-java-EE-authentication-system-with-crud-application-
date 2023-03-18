@@ -1,12 +1,13 @@
 package dao;
 
+import metier.entites.Personne;
 import metier.entites.Produit;
 
 public class TestProduitDao {
 
 	public static void main(String[] args) {
 		
-		ProduitDaoImp dao =new ProduitDaoImp();
+//		ProduitDaoImp dao =new ProduitDaoImp();
 //		Produit p1 = dao.AddProd(new Produit("HP ProBook 4330s",7000,10));
 //		 Produit p2 = dao.AddProd(new Produit("ACCENT",8000,20));
 //			Produit p3 = dao.AddProd(new Produit("HUAWEI",9000,30));
@@ -15,7 +16,10 @@ public class TestProduitDao {
 			System.out.println(p2.toString());
 			System.out.println(p3.toString());
 		 * */
-		System.out.println(dao.SearchProd("%HP%"));
+//		System.out.println(dao.SearchProd("%HP%"));
+		IDaoPesronneImp pp = new IDaoPesronneImp();
+		Personne p = new Personne("hciham","boufal","herrami@gmail.com","errami2005");
+		pp.save(p);
 		
 	}
 
